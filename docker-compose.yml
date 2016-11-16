@@ -1,0 +1,33 @@
+version: '2'
+services:
+  mosquitto1:
+    build: ./mosquitto1
+    hostname: mosquitto1
+    environment:
+      - AUTH_SERVICE_PORT=8100
+      - AUTH_SERVICE_ALIAS=atlas-auth
+      - BRIDGE_NODE=bridge1
+      - BROKERS=mosquitto2
+  
+  mosquitto2:
+    build: ./mosquitto2
+    hostname: mosquitto2
+    environment:
+      - AUTH_SERVICE_PORT=8100
+      - AUTH_SERVICE_ALIAS=atlas-auth
+      - BRIDGE_NODE=bridge1
+      - BROKERS=mosquitto1
+
+  bridge1:
+    build: ./bridge
+    hostname: bridge1
+    environment:
+      - AUTH_SERVICE_PORT=8100
+      - AUTH_SERVICE_ALIAS=atlas-auth
+      - BRIDGE_NODE=bridge1
+      - BROKERS=mosquitto1,mosquitto2
+
+networks:
+  default:
+    external:
+      name: atlas
