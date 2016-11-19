@@ -8,6 +8,8 @@ services:
       - AUTH_SERVICE_ALIAS=atlas-auth
       - BRIDGE_NODE=bridge1
       - BROKERS=mosquitto2
+    ports:
+      - 1883:1883
   
   mosquitto2:
     build: ./mosquitto2
@@ -17,6 +19,19 @@ services:
       - AUTH_SERVICE_ALIAS=atlas-auth
       - BRIDGE_NODE=bridge1
       - BROKERS=mosquitto1
+    ports:
+      - 1884:1883
+
+  mosquitto3:
+    build: ./mosquitto3
+    hostname: mosquitto3
+    environment:
+      - AUTH_SERVICE_PORT=8100
+      - AUTH_SERVICE_ALIAS=atlas-auth
+      - BRIDGE_NODE=bridge1
+      - BROKERS=mosquitto1
+    ports:
+      - 1885:1883
 
   bridge1:
     build: ./bridge
