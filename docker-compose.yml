@@ -1,46 +1,26 @@
 version: '2'
 services:
   mosquitto1:
-    build: ./mosquitto1
+    build: ./mosquitto-node
+    # image: local/alpine-mosquitto:latest
     hostname: mosquitto1
     environment:
-      - AUTH_SERVICE_PORT=8100
-      - AUTH_SERVICE_ALIAS=atlas-auth
-      - BRIDGE_NODE=bridge1
-      - BROKERS=mosquitto2
-    ports:
-      - 1883:1883
+      - MOSQUITTO_BRIDGE_NODES=bridge1:1883
+      - MOSQUITTO_OTHER_BROKERS=mosquitto2
   
   mosquitto2:
-    build: ./mosquitto2
+    build: ./mosquitto-node
+    # image: local/alpine-mosquitto:latest
     hostname: mosquitto2
     environment:
-      - AUTH_SERVICE_PORT=8100
-      - AUTH_SERVICE_ALIAS=atlas-auth
-      - BRIDGE_NODE=bridge1
-      - BROKERS=mosquitto1
-    ports:
-      - 1884:1883
-
-  mosquitto3:
-    build: ./mosquitto3
-    hostname: mosquitto3
-    environment:
-      - AUTH_SERVICE_PORT=8100
-      - AUTH_SERVICE_ALIAS=atlas-auth
-      - BRIDGE_NODE=bridge1
-      - BROKERS=mosquitto1
-    ports:
-      - 1885:1883
+      - MOSQUITTO_BRIDGE_NODES=bridge1:1883
+      - MOSQUITTO_OTHER_BROKERS=mosquitto1
 
   bridge1:
-    build: ./bridge
+    build: ./bridge-node
     hostname: bridge1
     environment:
-      - AUTH_SERVICE_PORT=8100
-      - AUTH_SERVICE_ALIAS=atlas-auth
-      - BRIDGE_NODE=bridge1
-      - BROKERS=mosquitto1,mosquitto2
+      - MOSQUITTO_BROKERS=mosquitto1 mosquitto2
 
 networks:
   default:
