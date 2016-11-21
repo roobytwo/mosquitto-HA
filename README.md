@@ -7,7 +7,7 @@ This project demonstrates how mosquitto brokers can be configured for high avail
 all applications in this project are run in docker containers, so simply clone the project, then run `docker-compose up`
 
 
-## Cluster Structre
+## Cluster Structure
 MQTT messages that are routed to any of the broker containers are forwarded to all other broker containers via one of the bridge nodes. The flow looks like this:
 
 ```
