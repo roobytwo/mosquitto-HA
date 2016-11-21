@@ -2,6 +2,8 @@ FROM alpine:3.4
 
 MAINTAINER Matt Rabinovitch
 
+ENV MOSQUITTO_HOME /etc/mosquitto/
+
 # add mosquitto group and user
 RUN addgroup -S mosquitto && \
     adduser -S -H -h /var/empty -s /sbin/nologin -D -G mosquitto mosquitto
@@ -16,15 +18,14 @@ RUN apk add --no-cache bash ca-certificates su-exec curl curl-dev libcurl libcap
 # install mosquitto
 RUN apk add --update mosquitto
 
-ENV MOSQUITTO_HOME /etc/mosquitto/
-
+# add config and run script
 ADD /config/mosquitto.conf $MOSQUITTO_HOME/mosquitto.conf
 ADD run.sh /run.sh
 RUN chmod +x /run.sh
+
+# make dir writable for mosquitto persistent storage
 RUN mkdir /var/lib/mosquitto \
 	&& chown mosquitto:mosquitto -R /var/lib/mosquitto
-
-
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 CMD ["/run.sh"]

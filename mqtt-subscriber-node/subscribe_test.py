@@ -1,8 +1,8 @@
 import paho.mqtt.client as mqtt
 import os
 
-ATLAS_HOST = os.environ['MOSQUITTO_ALIAS']
-ATLAS_PORT = int(os.environ['MOSQUITTO_PORT'])
+BROKER_HOST = os.environ['MOSQUITTO_ALIAS']
+BROKER_PORT = int(os.environ['MOSQUITTO_PORT'])
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):

@@ -1,28 +1,37 @@
 version: '2'
 services:
   mosquitto1:
-    build: ./mosquitto-node
-    # image: local/alpine-mosquitto:latest
+    image: rubytwo/mosquitto-ha-broker:0.0.1
     hostname: mosquitto1
     environment:
-      - MOSQUITTO_BRIDGE_NODES=bridge1:1883
-      - MOSQUITTO_OTHER_BROKERS=mosquitto2
+      MOSQUITTO_BRIDGE_NODES: bridge:1883 hot-standby-bridge:1883
+      MOSQUITTO_OTHER_BROKERS: mosquitto2,mosquitto3
   
   mosquitto2:
-    build: ./mosquitto-node
-    # image: local/alpine-mosquitto:latest
+    image: rubytwo/mosquitto-ha-broker:0.0.1
     hostname: mosquitto2
     environment:
-      - MOSQUITTO_BRIDGE_NODES=bridge1:1883
-      - MOSQUITTO_OTHER_BROKERS=mosquitto1
+      MOSQUITTO_BRIDGE_NODES: bridge:1883 hot-standby-bridge:1883
+      MOSQUITTO_OTHER_BROKERS: mosquitto1,mosquitto3
 
-  bridge1:
-    build: ./bridge-node
-    hostname: bridge1
+  mosquitto3:
+    image: rubytwo/mosquitto-ha-broker:0.0.1
+    hostname: mosquitto3
     environment:
-      - MOSQUITTO_BROKERS=mosquitto1 mosquitto2
+      MOSQUITTO_BRIDGE_NODES: bridge:1883 hot-standby-bridge:1883
+      MOSQUITTO_OTHER_BROKERS: mosquitto1,mosquitto2
 
-networks:
-  default:
-    external:
-      name: atlas
+  bridge:
+    image: rubytwo/mosquitto-alpine:0.0.1
+    hostname: bridge
+
+  hot-standby-bridge:
+    image: rubytwo/mosquitto-alpine:0.0.1
+    hostname: hot-standby-bridge
+
+  publisher:
+    image: rubytwo/mqtt-publisher:0.0.1
+    environment:
+      BROKER_HOST: mosquitto1
+      BROKER_PORT: 1883
+      WAIT_TO_PUBLISH_TIME: 10

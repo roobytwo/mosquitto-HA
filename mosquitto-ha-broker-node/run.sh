@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # lazy template building (me being lazy). Substitue all variables starting with MOSQUITTO or HOSTNAME
+IFS=$'\n'
 for VAR in `env`; do
   KEY="${VAR%=*}"
   VAL="${VAR#*=}"
@@ -9,8 +10,9 @@ for VAR in `env`; do
   fi
 done
 
-for broker in $(echo $MOSQUITTO_OTHER_BROKERS | sed "s/,/ /g"); do
-	echo "topic # in 2 \"\" $broker/" >> $MOSQUITTO_HOME/mosquitto.conf
+IFS=","
+for broker in $MOSQUITTO_OTHER_BROKERS; do
+	echo -e "\ntopic # in 2" '""' "$broker/" >> $MOSQUITTO_HOME/mosquitto.conf
 done
 
 exec mosquitto -c $MOSQUITTO_HOME/mosquitto.conf
