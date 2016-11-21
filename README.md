@@ -34,13 +34,17 @@ This image is based off of the Mosquitto Alpine image. It has added configuratio
 ##### Mosquitto Publisher <a id="mosquitto-publisher"></a>
 This is a simple MQTT publisher used for testing purposes. It publishes MQTT messages to the specified broker on the specified port. It has a delay interval which is necessary to give the mosquitto cluster time to stand up.
 
+## TODO
+
+* Add functional subscriber
+
 ## Contributing
 
 Fork and submit a pull request
 
 ## Authors
 
-**Matt Rabinovitch**
+ - Matt Rabinovitch
 
 ## License
 
